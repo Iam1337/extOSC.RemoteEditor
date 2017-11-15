@@ -1,5 +1,5 @@
 # extRemoteEditor
-**This project require: [extOSC](http://u3d.as/ADA) asset.**
+**This project require: [extOSC](http://u3d.as/ADA) (>= 1.7 version) asset.**
 
 Remote Editor based on extOSC asset.
 
