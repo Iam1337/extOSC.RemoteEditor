@@ -77,15 +77,18 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
-    m_PVRFiltering: 0
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
     m_PVRFilteringMode: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
     m_PVRFilteringGaussRadiusAO: 2
-    m_PVRFilteringAtrousColorSigma: 1
-    m_PVRFilteringAtrousNormalSigma: 1
-    m_PVRFilteringAtrousPositionSigma: 1
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -107,6 +110,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    debug:
+      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &83970266
 GameObject:
@@ -630,7 +635,6 @@ GameObject:
   - component: {fileID: 261182039}
   - component: {fileID: 261182038}
   - component: {fileID: 261182037}
-  - component: {fileID: 261182040}
   m_Layer: 0
   m_Name: OSC Manager
   m_TagString: Untagged
@@ -650,9 +654,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoConnect: 1
+  closeOnPause: 1
   mapBundle: {fileID: 0}
   workInEditor: 0
-  localPort: 7001
+  localPort: 7000
 --- !u!114 &261182038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,10 +670,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoConnect: 1
+  closeOnPause: 1
   mapBundle: {fileID: 0}
   workInEditor: 0
+  localPortMode: 1
+  localReceiver: {fileID: 261182037}
+  localPort: 7000
   remoteHost: 127.0.0.1
-  remotePort: 7000
+  remotePort: 7001
   useBundle: 1
 --- !u!4 &261182039
 Transform:
@@ -677,23 +686,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 261182036}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.499661, y: -3.2962742, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 731908706}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &261182040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 261182036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 611d0640f68d041c4b77eed55e0848e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &337348061
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,7 +767,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1896732966}
   m_HandleRect: {fileID: 1896732965}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1097,7 +1095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3a3d333f079e44089da6021f245d88f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  receiverAddress: /test
+  address: /address
   receiver: {fileID: 1090799062}
   transmitter: {fileID: 1090799063}
 --- !u!4 &485196944
@@ -1720,7 +1718,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -250}
+  m_AnchoredPosition: {x: 0, y: -249.99997}
   m_SizeDelta: {x: 550, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &682828550
@@ -1906,11 +1904,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 731908705}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.499661, y: 3.2962742, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 736360330}
   - {fileID: 261182039}
+  - {fileID: 736360330}
   - {fileID: 1141084261}
   m_Father: {fileID: 946778513}
   m_RootOrder: 0
@@ -1923,8 +1921,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 736360330}
-  - component: {fileID: 736360331}
   - component: {fileID: 736360332}
+  - component: {fileID: 736360331}
   m_Layer: 0
   m_Name: Remote Editor
   m_TagString: Untagged
@@ -1943,7 +1941,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 731908706}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &736360331
 MonoBehaviour:
@@ -1973,7 +1971,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc9c238d48684a889bd613fc8f4507a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  receiverAddress: /test
+  address: /address
   receiver: {fileID: 261182037}
   transmitter: {fileID: 261182038}
 --- !u!1 &770177170
@@ -2307,9 +2305,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoConnect: 1
+  closeOnPause: 1
   mapBundle: {fileID: 0}
   workInEditor: 0
-  localPort: 7000
+  localPort: 7001
 --- !u!114 &1090799063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2322,10 +2321,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoConnect: 1
+  closeOnPause: 1
   mapBundle: {fileID: 0}
   workInEditor: 0
+  localPortMode: 1
+  localReceiver: {fileID: 1090799062}
+  localPort: 7000
   remoteHost: 127.0.0.1
-  remotePort: 7001
+  remotePort: 7000
   useBundle: 1
 --- !u!4 &1090799064
 Transform:
@@ -2553,7 +2556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f67fd8998af92451580d3c9954f44a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RemoteClient: {fileID: 736360332}
+  Component: {fileID: 736360332}
   AddressInput: {fileID: 1801561645}
   PlayerPrefsPrefix: remoteclient
 --- !u!1 &1212161934
@@ -2957,7 +2960,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030473324, y: -0.00012207031}
+  m_AnchoredPosition: {x: -0.000030473324, y: -0.00006263083}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1461397682
@@ -3032,7 +3035,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 109.99996}
+  m_AnchoredPosition: {x: 0, y: 109.99997}
   m_SizeDelta: {x: 570, y: -620.00006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1476416430
@@ -3737,11 +3740,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 0
   m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!4 &1710432766
 Transform:
   m_ObjectHideFlags: 0
@@ -4664,7 +4667,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 421675874}
   m_HandleRect: {fileID: 421675873}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4955,7 +4958,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030473324, y: -0.000061035156}
+  m_AnchoredPosition: {x: -0.000030473324, y: -0.0000015956728}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2107058426

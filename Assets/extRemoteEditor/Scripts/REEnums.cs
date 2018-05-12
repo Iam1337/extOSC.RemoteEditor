@@ -25,4 +25,11 @@ namespace extRemoteEditor
 
         Cancel              // Cancel request.
     }
+
+	public enum REFieldType
+	{
+		Field,
+
+		Property
+	}
 }

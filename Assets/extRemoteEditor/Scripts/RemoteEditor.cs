@@ -57,9 +57,7 @@ namespace extRemoteEditor
             if (RemoteClient == null)
                 return;
 
-            RemoteClient.ClearObjects(ShowObjects);
-
-            //ShowObjects(0);
+			RemoteClient.ClearObjects(ShowObjects);
         }
 
         #endregion
@@ -88,16 +86,15 @@ namespace extRemoteEditor
                 var parent = remoteObject.Parent;
                 if (parent != null)
                 {
-                    HierarchyList.CreateButton("< " + parent.Name, () => { ShowObjects(parent.InstanceId);});
+                    HierarchyList.CreateButton("<color=grey><</color> " + parent.Name, () => { ShowObjects(parent.InstanceId);});
                 }
                 else
                 {
-                    HierarchyList.CreateButton("< Root", () => { ShowObjects(0);});
+					HierarchyList.CreateButton("<color=grey><</color> Root", () => { ShowObjects(0);});
                 }
 
-                HierarchyList.CreateSegment(remoteObject.Name + ":");
+                HierarchyList.CreateSegment(remoteObject.Name + " childs:");
             }
-
 
             RemoteClient.RefreshObjects(instanceId, BuildHierarchyButton, ShowComponents);
         }
@@ -147,8 +144,9 @@ namespace extRemoteEditor
             if (remoteComponent == null) return;
 
             var remoteField = remoteComponent.Fields[fieldIndex];
+			var fieldName = string.Format("[<color=grey>{0}</color>] {1}", remoteField.TypeName, remoteField.FieldName);
 
-            InspectorList.CreateButton(remoteField.FieldName, () => { RemoteClient.GetValue(parentId, fieldIndex, ShowValue); });
+            InspectorList.CreateButton(fieldName, () => { RemoteClient.GetValue(parentId, fieldIndex, ShowValue); });
         }
 
         // VALUES

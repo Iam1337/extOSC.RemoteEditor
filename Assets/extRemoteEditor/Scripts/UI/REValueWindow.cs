@@ -48,7 +48,7 @@ namespace extRemoteEditor.UI
             _field = field;
             _closeCallback = closeCallback;
 
-            Title.text = _field.FieldName + ":";
+			Title.text = string.Format("<color=grey>{0}</color> {1}:", _field.FieldType, _field.FieldName);
 
             BuildInputs();
 

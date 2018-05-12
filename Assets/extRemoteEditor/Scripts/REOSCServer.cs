@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 using extOSC;
 using extOSC.Serialization;
+using System.IO;
+using System.Text;
 
 namespace extRemoteEditor
 {
@@ -28,12 +30,14 @@ namespace extRemoteEditor
             RefreshRootObjects();
         }
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
+		protected override void Invoke(OSCMessage message)
         {
+			Debug.Log(message);
+
             if (message.Values.Count < 3)
                 return;
             
@@ -57,7 +61,7 @@ namespace extRemoteEditor
                 outputValues.Insert(0, OSCValue.String(taskId));
                 outputValues.Insert(1, OSCValue.Int((int)invokeStatus));
 
-                Send(ReceiverAddress, outputValues);
+                Send(Address, outputValues);
             }
         }
 
@@ -202,6 +206,8 @@ namespace extRemoteEditor
             outputValues.Add(OSCValue.Int(remoteComponent.Fields.Count));
             outputValues.Add(OSCValue.String(remoteField.FieldName));
             outputValues.Add(OSCValue.Int(remoteComponent.InstanceId));
+			outputValues.Add(OSCValue.Int((int)remoteField.FieldType));
+			outputValues.Add(OSCValue.String(remoteField.TypeName));
 
             return REInvokeStatus.Complete;
         }
@@ -361,7 +367,9 @@ namespace extRemoteEditor
                     continue;
 
                 var remoteField = new REField(fieldInfo);
-                remoteField.FieldName = fieldInfo.Name;
+				remoteField.FieldType = REFieldType.Field;
+				remoteField.TypeName = fieldInfo.FieldType.Name;
+				remoteField.FieldName = fieldInfo.Name;
                 remoteField.Parent = remoteComponent;
 
                 remoteComponent.Fields.Add(remoteField);
@@ -377,7 +385,9 @@ namespace extRemoteEditor
                     continue;
 
                 var remoteField = new REField(propertyInfo);
-                remoteField.FieldName = propertyInfo.Name;
+				remoteField.FieldType = REFieldType.Property;
+				remoteField.TypeName = propertyInfo.PropertyType.Name;
+				remoteField.FieldName = propertyInfo.Name;
                 remoteField.Parent = remoteComponent;
 
                 remoteComponent.Fields.Add(remoteField);

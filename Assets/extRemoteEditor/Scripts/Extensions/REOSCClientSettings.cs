@@ -10,7 +10,7 @@ namespace extRemoteEditor
         #region Public Vars
 
         [Header("Remote Client Settings:")]
-        public REOSCClient RemoteClient;
+		public REOSCComponent Component;
 
         public InputField AddressInput;
 
@@ -22,11 +22,11 @@ namespace extRemoteEditor
 
         protected void Start()
         {
-            RemoteClient.ReceiverAddress = PlayerPrefs.GetString(PlayerPrefsPrefix + ".address", RemoteClient.ReceiverAddress);
+            Component.Address = PlayerPrefs.GetString(PlayerPrefsPrefix + ".address", Component.Address);
 
             if (AddressInput != null)
             {
-                AddressInput.text = RemoteClient.ReceiverAddress;
+                AddressInput.text = Component.Address;
                 AddressInput.onEndEdit.AddListener(AddressEndEditCallback);
             }
         }
@@ -37,8 +37,9 @@ namespace extRemoteEditor
 
         private void AddressEndEditCallback(string text)
         {
-            RemoteClient.ReceiverAddress = text;
-            PlayerPrefs.SetString(PlayerPrefsPrefix + ".address", RemoteClient.ReceiverAddress);
+            Component.Address = text;
+
+            PlayerPrefs.SetString(PlayerPrefsPrefix + ".address", Component.Address);
         }
 
         #endregion

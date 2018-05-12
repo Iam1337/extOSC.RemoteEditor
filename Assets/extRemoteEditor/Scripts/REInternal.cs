@@ -54,6 +54,10 @@ namespace extRemoteEditor
 
         public string FieldName;
 
+		public string TypeName;
+
+		public REFieldType FieldType;
+
         public REComponent Parent;
 
         public OSCMatchPattern MatchPattern;

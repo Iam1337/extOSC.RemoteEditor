@@ -6,14 +6,29 @@ using System.Collections.Generic;
 
 using extOSC;
 using extOSC.Core;
-using extOSC.Components;
 using extOSC.Core.Events;
 
 namespace extRemoteEditor
 {
-    public abstract class REOSCComponent : MonoBehaviour, IOSCBind, IOSCReceiverComponent
+    public abstract class REOSCComponent : MonoBehaviour
     {
         #region Public Vars
+
+		public string Address
+		{
+			get { return address; }
+			set
+			{
+				if (address == value)
+					return;
+
+				Unbind();
+
+				address = value;
+
+				Bind();
+			}
+		}
 
         public OSCReceiver Receiver
         {
@@ -31,54 +46,26 @@ namespace extRemoteEditor
             }
         }
 
-        public string ReceiverAddress
-        {
-            get { return receiverAddress; }
-            set
-            {
-                if (receiverAddress == value)
-                    return;
+		public OSCTransmitter Transmitter
+		{
+			get { return transmitter; }
+			set { transmitter = value; }
+		}
 
-                Unbind();
+		#endregion
 
-                receiverAddress = value;
+		#region Protected Vars
 
-                Bind();
-            }
-        }
-
-        public OSCEventMessage Callback
-        {
-            get
-            {
-                if (callback == null)
-                {
-                    callback = new OSCEventMessage();
-                    callback.AddListener(InvokeMessage);
-                }
-
-                return callback;
-            }
-        }
-
-        public OSCTransmitter Transmitter
-        {
-            get { return transmitter; }
-            set { transmitter = value; }
-        }
-
-        #endregion
-
-        #region Protected Vars
-
-        [SerializeField]
-        protected string receiverAddress = "/address";
+		[SerializeField]
+        protected string address = "/address";
 
         [SerializeField]
         protected OSCReceiver receiver;
 
         [SerializeField]
         protected OSCTransmitter transmitter;
+
+		protected OSCBind bind;
 
         protected OSCEventMessage callback;
 
@@ -106,6 +93,12 @@ namespace extRemoteEditor
                 Unbind();
                 Bind();
             }
+
+			if (transmitter != null)
+			{
+				transmitter.LocalPortMode = OSCLocalPortMode.FromReceiver;
+				transmitter.LocalReceiver = receiver;
+			}
         }
 #endif
 
@@ -115,16 +108,19 @@ namespace extRemoteEditor
 
         public virtual void Bind()
         {
-            if (receiver != null)
-                receiver.Bind(this);
+			if (bind == null)
+				bind = new OSCBind(address, InvokeMessage);
+
+			if (receiver != null)
+				receiver.Bind(bind);
 
             bindedReceiver = receiver;
         }
 
         public virtual void Unbind()
         {
-            if (bindedReceiver != null)
-                bindedReceiver.Unbind(this);
+			if (bindedReceiver != null && bind != null)
+				bindedReceiver.Unbind(bind);
 
             bindedReceiver = null;
         }
@@ -135,7 +131,7 @@ namespace extRemoteEditor
 
         protected abstract void Invoke(OSCMessage message);
 
-        protected void Send(string address, IEnumerable<OSCValue> values)
+		protected virtual void Send(string address, IEnumerable<OSCValue> values)
         {
             if (transmitter != null)
             {
@@ -145,16 +141,6 @@ namespace extRemoteEditor
                 {
                     message.AddValue(value);
                 }
-
-                transmitter.Send(message);
-            }
-        }
-
-        protected void Send(string address, params OSCValue[] values)
-        {
-            if (transmitter != null)
-            {
-                var message = new OSCMessage(address, values);
 
                 transmitter.Send(message);
             }

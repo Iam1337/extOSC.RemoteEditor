@@ -1,8 +1,9 @@
 ﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
-using System.Collections.Generic;
-
 using extOSC;
+
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace extRemoteEditor
 {
@@ -89,35 +90,35 @@ namespace extRemoteEditor
         {
             var task = CreateTask(RECommand.Clear, 0, null, completeCallback);
 
-            Send(ReceiverAddress, task);
+            Send(Address, task);
         }
 
         public void RefreshObjects(int parentId, TaskProcess processCallback, TaskComplete completeCallback)
         {
             var task = CreateTask(RECommand.GetObjects, parentId, processCallback, completeCallback);
 
-            Send(ReceiverAddress, task, OSCValue.Int(0));
+            Send(Address, task, OSCValue.Int(0));
         }
 
         public void RefreshComponents(int parentId, TaskProcess processCallback, TaskComplete completeCallback)
         {
             var task = CreateTask(RECommand.GetComponents, parentId, processCallback, completeCallback);
 
-            Send(ReceiverAddress, task, OSCValue.Int(0));
+            Send(Address, task, OSCValue.Int(0));
         }
 
         public void RefreshFields(int parentId, TaskProcess processCallback, TaskComplete completeCallback)
         {
             var task = CreateTask(RECommand.GetFields, parentId, processCallback, completeCallback);
 
-            Send(ReceiverAddress, task, OSCValue.Int(0));
+            Send(Address, task, OSCValue.Int(0));
         }
 
         public void GetValue(int parentId, int fieldIndex, TaskProcess completeCallback)
         {
             var task = CreateTask(RECommand.GetValue, parentId, completeCallback, null);
 
-            Send(ReceiverAddress, task, OSCValue.Int(fieldIndex));
+            Send(Address, task, OSCValue.Int(fieldIndex));
         }
 
         public void SetValue(int parentId, int fieldIndex, List<OSCValue> values, TaskComplete completeCallback)
@@ -126,7 +127,7 @@ namespace extRemoteEditor
 
             values.Insert(0, OSCValue.Int(fieldIndex));
 
-            Send(ReceiverAddress, task, values.ToArray());
+            Send(Address, task, values.ToArray());
         }
 
         public REItem GetItem(int instanceId)
@@ -193,7 +194,7 @@ namespace extRemoteEditor
                 outputValues.Insert(1, OSCValue.Int((int)task.Command));
                 outputValues.Insert(2, OSCValue.Int(task.ParentId));
 
-                Send(ReceiverAddress, outputValues);
+                Send(Address, outputValues);
             }
             else
             {
@@ -231,7 +232,7 @@ namespace extRemoteEditor
             }
             else if (command == RECommand.Clear)
             {
-                task.Complete();
+                //task.Complete();
             }
 
             return REInvokeStatus.Cancel;
@@ -329,19 +330,23 @@ namespace extRemoteEditor
 
         private REInvokeStatus InvokeGetFieldsCommand(Task task, List<OSCValue> inputValues, ref List<OSCValue> outputValues)
         {
-            if (inputValues.Count != 4)
+            if (inputValues.Count != 6)
                 return REInvokeStatus.Cancel;
 
             if (inputValues[0].Type != OSCValueType.Int ||
                 inputValues[1].Type != OSCValueType.Int ||
                 inputValues[2].Type != OSCValueType.String ||
-                inputValues[3].Type != OSCValueType.Int)
+                inputValues[3].Type != OSCValueType.Int ||
+				inputValues[4].Type != OSCValueType.Int ||
+			    inputValues[5].Type != OSCValueType.String)
                 return REInvokeStatus.Cancel;
 
             var index = inputValues[0].IntValue;
             var count = inputValues[1].IntValue;
             var fieldName = inputValues[2].StringValue;
             var valueType = (OSCValueType)inputValues[3].IntValue;
+			var fieldType = (REFieldType)inputValues[4].IntValue;
+			var typeName = inputValues[5].StringValue;
 
             var remoteComponent = GetItem(task.ParentId) as REComponent;
             if (remoteComponent == null) return REInvokeStatus.Cancel;
@@ -349,6 +354,8 @@ namespace extRemoteEditor
             var remoteField = new REField();
             remoteField.Parent = remoteComponent;
             remoteField.FieldName = fieldName;
+			remoteField.FieldType = fieldType;
+			remoteField.TypeName = typeName;
 
             remoteComponent.Fields.Add(remoteField);
 
