@@ -4,6 +4,8 @@
 # FOLDERS
 # -------
 
+.mfractor/
+
 # Unity
 
 /[Ll]ibrary/
